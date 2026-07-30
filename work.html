@@ -40,6 +40,21 @@
         <h2 class="page-title">Work</h2>
       </div>
 
+      <div class="work-tools" aria-label="Search and filter work">
+        <label class="search-field">
+          <span class="sr-only">Search work</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"></circle><path d="m16 16 4 4"></path></svg>
+          <input id="work-search" type="search" placeholder="Search work" autocomplete="off" />
+        </label>
+        <label class="tag-filter">
+          <span>Filter by tag</span>
+          <select id="tag-filter" aria-label="Filter work by tag">
+            <option value="">All tags</option>
+          </select>
+        </label>
+      </div>
+      <p class="work-no-results" id="work-no-results" hidden>No work matches that search.</p>
+
       <!-- GIS Maps -->
       <section class="work-section">
         <h3 class="work-section-title">GIS Maps</h3>
@@ -69,7 +84,7 @@
         </div>
         <div class="project-entry">
           <div class="project-image-wrap">
-            <img src="beijing_building_footprints.png" alt="Building Coverage within 500m of Beijing Metro Stations" class="project-image" />
+            <img src="beijing_tod_map.png" alt="Building Coverage within 500m of Beijing Metro Stations" class="project-image" />
           </div>
           <div class="project-info">
             <div class="project-tags">
@@ -82,11 +97,11 @@
             <p class="project-desc">A proportional symbol map showing the proportion of each 500-meter buffer around Beijing Metro stations that is covered by buildings. Larger circles indicate a higher percentage of building coverage, while color encodes the same value — red for low coverage and green for high. The map spans the full Beijing Metro network, revealing how building density varies dramatically between the dense urban core and the outer suburban and airport lines.</p>
             <p class="project-meta">June 2026</p>
             <div class="project-actions">
-              <a class="download-btn" href="beijing_building_footprints.png" download="beijing_building_footprints.png">
+              <a class="download-btn" href="beijing_tod_map.png" download="Beijing_TOD_Map.png">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download Map
               </a>
-              <button class="fullscreen-btn" type="button" data-map-src="beijing_building_footprints.png" data-map-title="Transit-Oriented Development in Beijing">View Fullscreen</button>
+              <button class="fullscreen-btn" type="button" data-map-src="beijing_tod_map.png" data-map-title="Transit-Oriented Development in Beijing">View Fullscreen</button>
               <a class="more-info-btn" href="#">More Info</a>
             </div>
           </div>
@@ -256,6 +271,46 @@
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
     });
+
+    const searchInput = document.getElementById('work-search');
+    const tagFilter = document.getElementById('tag-filter');
+    const noResults = document.getElementById('work-no-results');
+    const entries = [...document.querySelectorAll('.project-entry, .pub-entry')];
+    const sections = [...document.querySelectorAll('.work-section')];
+    const divider = document.querySelector('.work-divider');
+    const tags = [...new Set([...document.querySelectorAll('.tag')].map((tag) => tag.textContent.trim()))]
+      .sort((a, b) => a.localeCompare(b));
+
+    tags.forEach((tag) => {
+      const option = document.createElement('option');
+      option.value = tag.toLowerCase();
+      option.textContent = tag;
+      tagFilter.append(option);
+    });
+
+    const filterWork = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      const selectedTag = tagFilter.value;
+      let visibleCount = 0;
+
+      entries.forEach((entry) => {
+        const entryTags = [...entry.querySelectorAll('.tag')].map((tag) => tag.textContent.trim().toLowerCase());
+        const matchesSearch = !query || entry.textContent.toLowerCase().includes(query);
+        const matchesTag = !selectedTag || entryTags.includes(selectedTag);
+        const isVisible = matchesSearch && matchesTag;
+        entry.hidden = !isVisible;
+        if (isVisible) visibleCount += 1;
+      });
+
+      sections.forEach((section) => {
+        section.hidden = !section.querySelector('.project-entry:not([hidden]), .pub-entry:not([hidden])');
+      });
+      divider.hidden = sections.some((section) => section.hidden);
+      noResults.hidden = visibleCount !== 0;
+    };
+
+    searchInput.addEventListener('input', filterWork);
+    tagFilter.addEventListener('change', filterWork);
   </script>
 
 </body>
