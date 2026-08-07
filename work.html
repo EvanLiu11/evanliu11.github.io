@@ -211,6 +211,40 @@
             </div>
           </div>
         </div>
+        <div class="project-entry">
+          <div class="project-gallery" aria-label="Elevation and population density project visuals">
+            <button class="gallery-image" type="button" data-map-src="san_diego_elevation.png" data-map-title="Elevation Map of San Diego County">
+              <img src="san_diego_elevation.png" alt="Elevation map of San Diego County" />
+              <span>Elevation</span>
+            </button>
+            <button class="gallery-image" type="button" data-map-src="san_diego_population_density.png" data-map-title="Ln Population Density in San Diego County Census Tracts">
+              <img src="san_diego_population_density.png" alt="Natural log population density in San Diego County census tracts" />
+              <span>Population Density</span>
+            </button>
+            <button class="gallery-image gallery-image-featured" type="button" data-map-src="san_diego_elevation_population_relationship.png" data-map-title="Elevation vs. Ln Population Density in San Diego County">
+              <img src="san_diego_elevation_population_relationship.png" alt="Scatterplot of elevation versus natural log population density in San Diego County" />
+              <span>Relationship Plot</span>
+            </button>
+          </div>
+          <div class="project-info">
+            <div class="project-tags">
+              <span class="tag">Elevation</span>
+              <span class="tag">Population Density</span>
+              <span class="tag">San Diego County</span>
+              <span class="tag">Raster Analysis</span>
+            </div>
+            <h4 class="project-title">Elevation &amp; Population Density in San Diego County</h4>
+            <p class="project-desc">A three-part spatial analysis examining the relationship between terrain and population distribution in San Diego County. The project combines an elevation surface, census-tract population density map, and a fitted relationship plot. Together, the visuals show a negative association: higher-elevation areas tend to have lower population density, while denser communities concentrate in lower-lying urban areas.</p>
+            <p class="project-meta">August 2026</p>
+            <div class="project-actions">
+              <a class="download-btn" href="san_diego_elevation.png" download="San_Diego_County_Elevation_Map.png">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Elevation Map
+              </a>
+              <a class="more-info-btn" href="#">More Info</a>
+            </div>
+          </div>
+        </div>
       </section>
 
       <div class="work-divider"></div>
@@ -261,7 +295,7 @@
       document.body.classList.remove('modal-open');
     };
 
-    document.querySelectorAll('.fullscreen-btn').forEach((button) => {
+    document.querySelectorAll('[data-map-src]').forEach((button) => {
       button.addEventListener('click', () => {
         const { mapSrc, mapTitle } = button.dataset;
         modalImage.src = mapSrc;
